@@ -1,13 +1,14 @@
 (async () => {
-    let stats = await (await fetch("json/stats.json")).json()
+    let stats = await (await fetch("api/stats")).json()
     for (let i = 0; i < stats.servers.length; i++) {
         let node = document.createElement("div")
         node.id += "table-item-" + i
         node.className = "table-item"
         document.querySelector(".list-inner").append(node)
         if (stats.servers[i].online4 || stats.servers[i].online6) {
+            getDetails(`#table-item-${i}`, stats.servers[i])
             document.querySelector(`#table-item-${i}`).innerHTML = `<div class="node">
-    <img class="flag" src="https://cdn.jsdelivr.net/gh/wjy20030407/wjy/images/flags/square/${stats.servers[i].region}.svg" alt>
+    <img class="flag" src="https://z-fs.vercel.app/flags/square/${stats.servers[i].region}.svg" alt>
     <div>
         <div class="name">${stats.servers[i].name}</div>
         <div class="location">${stats.servers[i].location}</div>
@@ -45,7 +46,7 @@
             document.querySelector(`#table-item-${i}`).style.borderColor = Math.round(stats.servers[i].cpu) <= 70 ? "" : "#faae42"
         } else {
             document.querySelector(`#table-item-${i}`).innerHTML = `<div class="node">
-    <img class="flag" src="https://cdn.jsdelivr.net/gh/wjy20030407/wjy/images/flags/square/${stats.servers[i].region}.svg" alt>
+    <img class="flag" src="https://z-fs.vercel.app/flags/square/${stats.servers[i].region}.svg" alt>
     <div>
         <div class="name">${stats.servers[i].name}</div>
         <div class="location">${stats.servers[i].location}</div>
@@ -87,12 +88,13 @@
 
 setInterval(() => {
     (async () => {
-        let stats = await (await fetch("json/stats.json")).json()
+        let stats = await (await fetch("api/stats")).json()
         for (let i = 0; i < stats.servers.length; i++) {
             try {
                 if (stats.servers[i].online4 || stats.servers[i].online6) {
+                    getDetails(`#table-item-${i}`, stats.servers[i])
                     document.querySelector(`#table-item-${i}`).style.borderColor = Math.round(stats.servers[i].cpu) <= 70 ? "" : "#faae42"
-                    document.querySelector(`#table-item-${i} .flag`).src = `https://cdn.jsdelivr.net/gh/wjy20030407/wjy/images/flags/square/${stats.servers[i].region}.svg`
+                    document.querySelector(`#table-item-${i} .flag`).src = `https://z-fs.vercel.app/flags/square/${stats.servers[i].region}.svg`
                     document.querySelector(`#table-item-${i} .location`).textContent = stats.servers[i].location
                     document.querySelector(`#table-item-${i} .type`).textContent = stats.servers[i].type
                     document.querySelector(`#table-item-${i} .uptime`).textContent = stats.servers[i].uptime == "1 天" ? "1 Day" : stats.servers[i].uptime.replace(/天/, "Days")
@@ -110,8 +112,9 @@ setInterval(() => {
                     document.querySelector(`#table-item-${i} .status-dot`).style.backgroundColor = Math.round(stats.servers[i].cpu) <= 70 ? "" : "#faae42"
                     document.querySelector(`#table-item-${i} .status-info`).textContent = Math.round(stats.servers[i].cpu) <= 70 ? "Available" : "Busy"
                 } else {
+                    document.querySelector(`#table-item-${i}`).onclick = null
                     document.querySelector(`#table-item-${i}`).style.borderColor = "#e62965"
-                    document.querySelector(`#table-item-${i} .flag`).src = `https://cdn.jsdelivr.net/gh/wjy20030407/wjy/images/flags/square/${stats.servers[i].region}.svg`
+                    document.querySelector(`#table-item-${i} .flag`).src = `https://z-fs.vercel.app/flags/square/${stats.servers[i].region}.svg`
                     document.querySelector(`#table-item-${i} .location`).textContent = stats.servers[i].location
                     document.querySelector(`#table-item-${i} .type`).textContent = stats.servers[i].type
                     document.querySelector(`#table-item-${i} .uptime`).textContent = "Offline"
@@ -130,6 +133,7 @@ setInterval(() => {
                     document.querySelector(`#table-item-${i} .status-info`).textContent = "Offline"
                 }
             } catch {
+                document.querySelector(`#table-item-${i}`).onclick = null
                 document.querySelector(`#table-item-${i}`).style.borderColor = "#e62965"
                 document.querySelector(`#table-item-${i} .uptime`).textContent = "Offline"
                 document.querySelector(`#table-item-${i} .network`).textContent = "-"
@@ -150,6 +154,26 @@ setInterval(() => {
     })()
 }, 3000);
 
+let getDetails = (item, data) => {
+    document.querySelector(item).onclick = () => {
+        Swal.fire({
+            html: `<div style="margin-bottom: 20px; display: flex; align-items: center; justify-content: center;">
+                <img style="margin-right: 10px; height: 50px;" src="https://z-fs.vercel.app/flags/rounded-rectangle/${data.region}.svg" alt>
+                <h2>${data.name}</h2>
+            </div>
+            <div style="margin: 0 auto 10px; width: 350px; text-align: left; display: flex;"><p style="width: 35%;">Type:</p><p style="width: 65%;">${data.type}</p></div>
+            <div style="margin: 0 auto 10px; width: 350px; text-align: left; display: flex;"><p style="width: 35%;">Uptime:</p><p style="width: 65%;">${data.uptime == "1 天" ? "1 Day" : data.uptime.replace(/天/, "Days")}</p></div>
+            <div style="margin: 0 auto 10px; width: 350px; text-align: left; display: flex;"><p style="width: 35%;">CPU:</p><p style="width: 65%;">${data.cpu}%</p></div>
+            <div style="margin: 0 auto 10px; width: 350px; text-align: left; display: flex;"><p style="width: 35%;">Memory:</p><p style="width: 65%;">${Math.round(data.memory_used / data.memory_total * 100)}% (${byteConvert2(data.memory_used)} / ${byteConvert2(data.memory_total)})</p></div>
+            <div style="margin: 0 auto 10px; width: 350px; text-align: left; display: flex;"><p style="width: 35%;">Swap:</p><p style="width: 65%;">${data.swap_used == 0 ? "None" : `${Math.round(data.swap_used / data.swap_total * 100)}% (${byteConvert2(data.swap_used)} / ${byteConvert2(data.swap_total)})</p></div>`}</p></div>
+            <div style="margin: 0 auto 10px; width: 350px; text-align: left; display: flex;"><p style="width: 35%;">HDD:</p><p style="width: 65%;">${Math.round(data.hdd_used / data.hdd_total * 100)}% (${byteConvert2(data.hdd_used * 1024)} / ${byteConvert2(data.hdd_total * 1024)})</p></div>
+            <div style="margin: 0 auto 10px; width: 350px; text-align: left; display: flex;"><p style="width: 35%;">Network:</p><p style="width: 65%;">${byteConvert(data.network_tx)}↑ ${byteConvert(data.network_rx)}↓</p></div>
+            <div style="margin: 0 auto 10px; width: 350px; text-align: left; display: flex;"><p style="width: 35%;">Traffic:</p><p style="width: 65%;">${byteConvert(data.network_out)}↑ ${byteConvert(data.network_in)}↓</p></div>`,
+            showConfirmButton: false
+        })
+    }
+}
+
 let byteConvert = (data) => {
     if (data < 1024) {
         return data.toFixed(0) + 'B'
@@ -164,6 +188,18 @@ let byteConvert = (data) => {
     }
 }
 
+let byteConvert2 = (data) => {
+    if (data < 1024) {
+        return data.toFixed(0) + 'KiB'
+    } else if (data < 1024 * 1024) {
+        return (data / 1024).toFixed(0) + 'MiB'
+    } else if (data < 1024 * 1024 * 1024) {
+        return (data / 1024 / 1024).toFixed(1) + 'GiB'
+    } else {
+        return (data / 1024 / 1024 / 1024).toFixed(2) + 'TiB'
+    }
+}
+
 let progressConvert = (data) => {
     if (data <= 70) {
         return ""
@@ -173,3 +209,4 @@ let progressConvert = (data) => {
         return "#e62965"
     }
 }
+

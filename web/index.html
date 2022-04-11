@@ -1,40 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="favicon.ico">
-    <title>Server Status</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/serverstatus.js" async></script>
-</head>
-<body>
-    <div class="header">
-        <h1>Server Status</h1>
-    </div>
-    <div class="content">
-        <div class="table-header">
-            <div class="node">Node</div>
-            <div class="type">Type</div>
-            <div class="uptime">Uptime</div>
-            <div class="network">Network</div>
-            <div class="traffic">Traffic</div>
-            <div class="cpu">CPU</div>
-            <div class="mem">MEM</div>
-            <div class="hdd">HDD</div>
-            <div class="status">Status</div>
-        </div>
-        <noscript>
-            <div class="table-item" style="border-color: #e62965; align-items: center; align-content: center;">
-                <p style="width: 100%; color: #f2f2f2; text-align: center;"><strong>Enable JavaScript</strong> you fucking autist neckbeard, it's not gonna hurt you.</p>
-            </div>
-        </noscript>
-        <div class="list-inner"></div>
-    </div>
-    <div class="footer">
-        <p>&copy; 2022 <a href="https://wjy.me">Dreamy.WJY</a></p> & <a href="https://status.warma.me">Warma</a></p>
-        <p>Powered by <a href="https://github.com/cokemine/ServerStatus-Hotaru">Server Status</a></p>
-    </div>
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Server Status</title>
+		<link rel="icon" href="favicon.svg">
+		<link rel="stylesheet" href="css/style.css">
+		<script src="//cdn.jsdelivr.net/npm/sweetalert2@11.4.0"></script>
+		<script src="js/serverstatus.js" async></script>
+	</head>
+	<body>
+		<div class="header">
+			<h1>Server Status</h1>
+		</div>
+		<div class="content">
+			<div class="table-header">
+				<div class="node">Node</div>
+				<div class="type">Type</div>
+				<div class="uptime">Uptime</div>
+				<div class="network">Network</div>
+				<div class="traffic">Traffic</div>
+				<div class="cpu">CPU</div>
+				<div class="mem">MEM</div>
+				<div class="hdd">HDD</div>
+				<div class="status">Status</div>
+			</div><noscript>
+				<div class="table-item" style="border-color: #e62965; align-items: center; align-content: center;">
+					<p style="width: 100%; color: #f2f2f2; text-align: center;"><strong>Enable JavaScript</strong>you
+						fucking autist neckbeard,it's not gonna hurt you.</p>
+				</div>
+			</noscript>
+			<div class="list-inner"></div>
+		</div>
+		<div class="footer">
+			<p>©2022 <a href="https://status.warma.top">Warma</a> | Powered by <a
+					href="https://hub.docker.com/r/wjy20030407/status">Server Status</a></p>
+		</div>
+	</body>
 </html>
